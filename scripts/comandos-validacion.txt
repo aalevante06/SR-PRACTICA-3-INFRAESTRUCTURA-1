@@ -1,0 +1,56 @@
+PRÁCTICA #3 — INFRAESTRUCTURA #1
+COMANDOS DE VALIDACIÓN
+
+=== PC-VLAN10 ===
+ssh -o ConnectTimeout=5 ariel@10.21.75.2
+curl -I http://10.21.75.3
+ip addr show ens3
+ip route
+
+=== PC-VLAN20 ===
+ssh ariel@10.21.75.2
+ip addr show ens3
+ip route
+
+=== WEB-CAJA / DMZ ===
+sudo apt update
+curl -I --max-time 5 http://example.com
+ping -c 3 10.21.74.10
+ping -c 3 10.21.74.141
+curl http://localhost
+systemctl is-active apache2
+systemctl is-active ssh
+
+=== WEB-INVENTARIO ===
+curl http://localhost
+systemctl is-active apache2
+systemctl is-active ssh
+
+=== DB-SERVER ===
+systemctl is-active mariadb
+systemctl is-active ssh
+sudo mariadb
+USE infraestructura1;
+SELECT * FROM productos;
+
+=== SW-USERS-2174 ===
+show vlan brief
+show interfaces trunk
+show port-security
+show interfaces status
+
+=== SW-SERVERS-2174 ===
+show vlan brief
+show interfaces trunk
+show port-security
+show interfaces status
+
+=== ISP-2174 ===
+ping google.com
+show ip nat statistics
+show ip nat translations
+
+=== FORTIGATE ===
+get router info routing-table all
+execute ping 8.8.8.8
+execute ping google.com
