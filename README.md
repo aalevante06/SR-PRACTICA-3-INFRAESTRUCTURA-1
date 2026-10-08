@@ -31,30 +31,40 @@ La práctica demuestra que:
 ![Topología general](evidencias/01-topologia-general.png)
 
 ```mermaid
-flowchart TB
-    NAT["NAT1 / Internet"]
-    ISP["ISP-2174<br/>Fa0/0 DHCP<br/>Fa1/0 21.74.3.1/30"]
-    FG["FG-2174 / FortiGate VM64-KVM<br/>port1 21.74.3.2/30<br/>port3 192.168.79.99/24"]
+flowchart LR
+    NAT["GNS3 NAT<br/>Internet"]
+    ISP["ISP-2174<br/>Fa0/0: DHCP<br/>Fa1/0: 21.74.3.1/30"]
+    FG["FortiGate-2174<br/>port1: 21.74.3.2/30<br/>port2: trunk VLAN 10, 20 y 30<br/>port3: 192.168.79.99/24"]
     CLOUD["Cloud1<br/>Acceso GUI"]
-    SWU["SW-USERS-2174<br/>VLAN 10 / 20 / 30 / 999"]
-    SWS["SW-SERVERS-2174<br/>VLAN 30 / 999"]
-    PC10["PC-VLAN10-2174<br/>10.21.74.11/25 DHCP"]
-    PC20["PC-VLAN20-2174<br/>10.21.74.141/25 DHCP"]
-    CAJA["WEB-CAJA-2174<br/>10.21.75.2/28<br/>Apache2 + SSH"]
-    INV["WEB-INV-2174<br/>10.21.75.3/28<br/>Apache2 + SSH"]
-    DB["DB-SV-2174<br/>10.21.75.4/28<br/>MariaDB + SSH"]
 
-    NAT --- ISP
-    ISP --- FG
-    CLOUD --- FG
-    FG ---|"port2 / trunk 802.1Q VLAN 10,20,30"| SWU
-    SWU ---|"Gi0/1 access VLAN 10"| PC10
-    SWU ---|"Gi0/2 access VLAN 20"| PC20
-    SWU ---|"Gi1/2 trunk VLAN 30 / native 999"| SWS
-    SWS ---|"Gi0/1 access VLAN 30"| CAJA
-    SWS ---|"Gi0/2 access VLAN 30"| INV
-    SWS ---|"Gi0/3 access VLAN 30"| DB
+    subgraph USERS["Redes de usuarios"]
+        SWU["SW-USERS-2174"]
+        PC10["PC-VLAN10-2174<br/>10.21.74.11/25<br/>GW 10.21.74.1"]
+        PC20["PC-VLAN20-2174<br/>10.21.74.141/25<br/>GW 10.21.74.129"]
+
+        SWU -->|"Gi0/1 - VLAN 10"| PC10
+        SWU -->|"Gi0/2 - VLAN 20"| PC20
+    end
+
+    subgraph DMZ["DMZ - VLAN 30"]
+        SWS["SW-SERVERS-2174"]
+        CAJA["WEB-CAJA-2174<br/>10.21.75.2/28<br/>Apache2 + SSH"]
+        INV["WEB-INVENTARIO-2174<br/>10.21.75.3/28<br/>Apache2 + SSH"]
+        DB["DB-SERVER-2174<br/>10.21.75.4/28<br/>MariaDB + SSH"]
+
+        SWS -->|"Gi0/1 - VLAN 30"| CAJA
+        SWS -->|"Gi0/2 - VLAN 30"| INV
+        SWS -->|"Gi0/3 - VLAN 30"| DB
+    end
+
+    NAT --> ISP
+    ISP -->|"21.74.3.0/30"| FG
+    FG -.->|"Administración"| CLOUD
+    FG -->|"port2 - 802.1Q"| SWU
+    SWU -->|"Gi1/2 - trunk VLAN 30<br/>native VLAN 999"| SWS
 ```
+
+> El diagrama Mermaid representa la topología lógica. La captura superior muestra la implementación real en GNS3.
 
 ---
 
