@@ -1,6 +1,6 @@
 # 🛡️ Práctica #3 — Infraestructura #1: Segmentación VLAN, DMZ y Control de Acceso con FortiGate
 
-> **Video de demostración:** [🎥 Ver video](PENDIENTE-URL-DEL-VIDEO)
+> **Video de demostración:** [🎥 Ver video](https://youtu.be/-24_gHBujoQ)
 
 **Asignatura:** Seguridad de Redes  
 **Estudiante:** Luis Ariel Alevante Agramonte  
